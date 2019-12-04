@@ -10,5 +10,4 @@ if (dev) {
   require('ts-node').register({project})
 }
 
-require(`../${dev ? 'src' : 'lib'}`).run()
-.catch(console.error)
+require(`../${dev ? 'src' : 'lib'}`)

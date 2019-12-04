@@ -991,6 +991,11 @@ table@^5.2.3:
     slice-ansi "^2.1.0"
     string-width "^3.0.0"
 
+terminal-game-io@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/terminal-game-io/-/terminal-game-io-3.1.0.tgz#5136cb16136a3241efcbbaca71f2e6f71bc0901c"
+  integrity sha512-lbYlAGe2QG2FJ6zbJP6hXuRiGH/tAmloDsdK4I8W3/+Mdv9lgpVogR/o0IGMssgBsAlOmi0lw6klkdyJMLStIg==
+
 text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
