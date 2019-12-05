@@ -23,29 +23,24 @@ const frameHandler = (instance: ITerminalGameIo) => {
             frameData += (posX === x && posY === y) ? '@' : '.';
         }
     }
-    posX += 1
-    if (posX > 30) posX = 0
     instance.drawFrame(frameData, BOARD_WIDTH, BOARD_HEIGHT);
 }
 
-//KeyName,
-//IAbstractTerminalGameIo
 const keypressHandler = (instance: ITerminalGameIo, keyName: KeyName) => {
-    process.exit(0)
     switch(keyName) {
-        case Key.ArrowDown:
+        case 's':
             posY = (posY + 1) % BOARD_HEIGHT;
             break;
-        case 'a':
+        case 'w':
             posY = posY === 0 ? BOARD_HEIGHT - 1 : posY - 1;
             break;
-        case Key.ArrowLeft:
+        case 'a':
             posX = posX === 0 ? BOARD_WIDTH - 1 : posX - 1;
             break;
-        case Key.ArrowRight:
+        case 'd':
             posX = (posX + 1) % BOARD_WIDTH;
             break;
-        case Key.Escape:
+        case 'q':
             instance.exit();
             break;
     }
@@ -54,14 +49,11 @@ const keypressHandler = (instance: ITerminalGameIo, keyName: KeyName) => {
 }
 
 const startGame = () => {
-    console.log(keypressHandler)
-    setTimeout(() => {
-        createTerminalGameIo({
-            fps: 12,
-            frameHandler,
-            keypressHandler,
-        })
-    }, 3000)
+  createTerminalGameIo({
+      fps: FPS,
+      frameHandler,
+      keypressHandler,
+  })
 }
 
 export default startGame
