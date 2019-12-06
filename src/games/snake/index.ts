@@ -21,23 +21,31 @@ enum Direction {
     Right,
 }
 
-const getKey = (x: number, y: number) : string => {
-    return `${x}x${y}`
-}
-
+const getKey = (x: number, y: number) : string => `${x}x${y}`
 let direction = Direction.Right
-let key = getKey(posX, posY)
-let keys = [key]
-let snake = {
-    [key]: true
+
+const keys = [
+    getKey(posX - 2, posY),
+    getKey(posX - 1, posY),
+    getKey(posX, posY)
+]
+
+const snake = {
+    [getKey(posX - 2, posY)]: true,
+    [getKey(posX - 1, posY)]: true,
+    [getKey(posX, posY)]: true,
 }
 
 let foodPosition = ''
 
+const getBetween = (min: number, max: number) : number => (
+    Math.floor(Math.random() * max) + min
+)
+
 const setFoodPosition = () => {
-    const x = Math.floor(Math.random() * BOARD_WIDTH) + 0
-    const y = Math.floor(Math.random() * BOARD_HEIGHT) + 0
-    const positionFood = `${x}x${y}`
+    const x = getBetween(0, BOARD_WIDTH)
+    const y = getBetween(0, BOARD_HEIGHT)
+    const positionFood = getKey(x, y)
     foodPosition = positionFood
 }
 
@@ -61,9 +69,14 @@ const move = () => {
             break
     }
 
-    key = `${posX}x${posY}`
+    const key = getKey(posX,posY)
     snake[key] = true
     keys.push(key)
+
+    if (foodPosition == key) {
+        setFoodPosition()
+        return
+    }
 
     const keyToDelete = keys.shift() || ''
     if (snake[keyToDelete]) {
@@ -83,7 +96,7 @@ const frameHandler = (instance: ITerminalGameIo) => {
             }
 
             if (foodPosition == currentPosition) {
-                frameData += '+'
+                frameData += 'Φ'
                 continue
             }
 
