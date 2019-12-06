@@ -10,6 +10,7 @@ const FPS = 4;
 const BOARD_WIDTH = 60;
 const BOARD_HEIGHT = 20;
 
+let isLooser = false
 let terminalGameIo;
 let posX = Math.round(BOARD_WIDTH / 2);
 let posY = Math.round(BOARD_HEIGHT / 2);
@@ -70,6 +71,11 @@ const move = () => {
     }
 
     const key = getKey(posX,posY)
+    if (snake[key]) {
+        isLooser = true
+        return;
+    }
+
     snake[key] = true
     keys.push(key)
 
@@ -86,6 +92,19 @@ const move = () => {
 
 const frameHandler = (instance: ITerminalGameIo) => {
     let frameData = '';
+
+    if (isLooser) {
+        for (let y = 0; y < BOARD_HEIGHT; y++) {
+            for (let x = 0; x < BOARD_WIDTH; x++) {
+                frameData += '#';
+            }
+        }
+
+        const message = 'You loose. Press Q to Quit. '
+        frameData = `${message}${frameData.slice(message.length)}`
+        instance.drawFrame(frameData, BOARD_WIDTH, BOARD_HEIGHT);
+        return
+    }
 
     for (let y = 0; y < BOARD_HEIGHT; y++) {
         for (let x = 0; x < BOARD_WIDTH; x++) {
