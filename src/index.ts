@@ -2,12 +2,14 @@ import games from './games'
 import clear from 'clear'
 import figlet from 'figlet'
 import { prompt } from 'inquirer'
+import menu from './menu'
 
 const main = async () => {
     clear()
 
     console.log(figlet.textSync('Steaminal', 'Speed'))
     const key = 'Choose the game'
+
 
     /*prompt({
         name: key,
@@ -28,4 +30,6 @@ const main = async () => {
 
 }
 
-main()
+//main()
+
+menu()
