@@ -19,6 +19,11 @@ const options = [
   'Dinossaur Adventure',
 ];
 
+const descriptions = [
+  'Classic Snake game with WASD commands',
+  'Game like a Downossaur in Google Chrome game',
+];
+
 let selectedOption = 0;
 
 const FPS = 60;
@@ -73,6 +78,11 @@ const frameHandler = (instance) => {
       frameData += options.map((option, idx) => lineToGame(option, idx)).join('');
 
       y += options.length - 1;
+      continue;
+    }
+
+    if (y === BOARD_HEIGHT - 8) {
+      frameData += lineContentCentered(descriptions[selectedOption]);
       continue;
     }
 
