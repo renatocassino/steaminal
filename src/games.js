@@ -1,5 +1,5 @@
-import snakeGame from './games/snake'
+import snakeGame from './games/snake';
 
 export default {
-    Snake: snakeGame,
-}
+  Snake: snakeGame,
+};

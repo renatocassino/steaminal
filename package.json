@@ -18,7 +18,9 @@
     "@babel/node": "^7.7.4",
     "@babel/preset-env": "^7.7.5",
     "@babel/register": "^7.7.4",
-    "eslint": "^5.13"
+    "eslint": "^6.7.2",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
   },
   "engines": {
     "node": ">=8.0.0"
@@ -33,8 +35,7 @@
   "main": "lib/index.js",
   "repository": "tacnoman/steaminal",
   "scripts": {
-    "posttest": "eslint . --ext .js --config .eslintrc",
-    "prepack": "rm -rf lib && tsc -b",
+    "lint": "eslint . --ext .js",
     "build": "rm -rf lib && babel src --out-dir lib",
     "run": "node bin/run",
     "test": "echo NO TESTS"
