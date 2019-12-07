@@ -6,6 +6,7 @@ import {
     KeyName,
 } from 'terminal-game-io'
 import figlet from 'figlet'
+import clear from 'clear'
 import games from './games'
 
 let game = null
@@ -105,17 +106,21 @@ const frameHandler = (instance) => {
 
 const keypressHandler = (instance, keyName) => {
     switch(keyName) {
-        case 's':
-            selectedOption += 1
-            if (selectedOption >= options.length) selectedOption = 0
-            break
-        case 'w':
-            selectedOption -= 1
-            if (selectedOption < 0) selectedOption = options.length - 1
-            break
-        case Key.Enter:
-            break
-        case 'q': process.exit(0)
+    case 's':
+        selectedOption += 1
+        if (selectedOption >= options.length) selectedOption = 0
+        break
+    case 'w':
+        selectedOption -= 1
+        if (selectedOption < 0) selectedOption = options.length - 1
+        break
+    case Key.Enter:
+        game.active = false
+        clearInterval(game.intervalId)
+        clear()
+        games.Snake()
+        break
+    case 'q': process.exit(0)
     }
 }
 
