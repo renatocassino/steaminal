@@ -7,10 +7,6 @@ import menu from './menu'
 const main = async () => {
     clear()
 
-    console.log(figlet.textSync('Steaminal', 'Speed'))
-    const key = 'Choose the game'
-
-
     /*prompt({
         name: key,
         type: 'list',

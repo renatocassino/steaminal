@@ -34,7 +34,6 @@
   ],
   "homepage": "https://github.com/tacnoman/steaminal",
   "keywords": [
-    "oclif"
   ],
   "license": "MIT",
   "main": "lib/index.js",
