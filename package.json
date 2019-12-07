@@ -8,22 +8,17 @@
   },
   "bugs": "https://github.com/tacnoman/steaminal/issues",
   "dependencies": {
-    "@types/clear": "^0.1.0",
-    "@types/figlet": "^1.2.0",
-    "@types/inquirer": "^6.5.0",
     "clear": "^0.1.0",
     "figlet": "^1.2.4",
-    "inquirer": "^7.0.0",
-    "terminal-game-io": "^3.1.0",
-    "tslib": "^1"
+    "terminal-game-io": "^3.1.0"
   },
   "devDependencies": {
-    "@types/node": "^10",
-    "eslint": "^5.13",
-    "eslint-config-oclif": "^3.1",
-    "eslint-config-oclif-typescript": "^0.1",
-    "ts-node": "^8",
-    "typescript": "^3.3"
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/node": "^7.7.4",
+    "@babel/preset-env": "^7.7.5",
+    "@babel/register": "^7.7.4",
+    "eslint": "^5.13"
   },
   "engines": {
     "node": ">=8.0.0"
@@ -33,17 +28,15 @@
     "/lib"
   ],
   "homepage": "https://github.com/tacnoman/steaminal",
-  "keywords": [
-  ],
+  "keywords": [],
   "license": "MIT",
   "main": "lib/index.js",
   "repository": "tacnoman/steaminal",
   "scripts": {
-    "posttest": "eslint . --ext .ts --config .eslintrc",
+    "posttest": "eslint . --ext .js --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b",
-    "build": "rm -rf lib && tsc -b",
+    "build": "rm -rf lib && babel src --out-dir lib",
     "run": "node bin/run",
     "test": "echo NO TESTS"
-  },
-  "types": "lib/index.d.ts"
+  }
 }

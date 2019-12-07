@@ -2,12 +2,17 @@
 
 const fs = require('fs')
 const path = require('path')
-const project = path.join(__dirname, '../tsconfig.json')
+const project = path.join(__dirname, '../.babelrc')
 const exists = fs.existsSync(project)
 const dev = exists && process.env.NODE_ENV !== 'production'
 
 if (dev) {
-  require('ts-node').register({project})
+    require('@babel/register')({
+        extends: project,
+        ignore: [/node_modules/],
+    })
 }
 
-require(`../${dev ? 'src' : 'lib'}`)
+const file = `${__dirname}/../${dev ? 'src' : 'lib'}/index`;
+console.log(file)
+require(file);

@@ -15,14 +15,14 @@ let terminalGameIo;
 let posX = Math.round(BOARD_WIDTH / 2);
 let posY = Math.round(BOARD_HEIGHT / 2);
 
-enum Direction {
-    Up = 1,
-    Down,
-    Left,
-    Right,
-}
+const Direction = {
+    Up: 1,
+    Down: 2,
+    Left: 3,
+    Right: 4,
+};
 
-const getKey = (x: number, y: number) : string => `${x}x${y}`
+const getKey = (x, y) => `${x}x${y}`
 let direction = Direction.Right
 
 const keys = [
@@ -39,7 +39,7 @@ const snake = {
 
 let foodPosition = ''
 
-const getBetween = (min: number, max: number) : number => (
+const getBetween = (min, max) => (
     Math.floor(Math.random() * max) + min
 )
 
@@ -90,7 +90,7 @@ const move = () => {
     }
 }
 
-const frameHandler = (instance: ITerminalGameIo) => {
+const frameHandler = (instance) => {
     let frameData = '';
 
     if (isLooser) {
@@ -127,7 +127,7 @@ const frameHandler = (instance: ITerminalGameIo) => {
     instance.drawFrame(frameData, BOARD_WIDTH, BOARD_HEIGHT);
 }
 
-const keypressHandler = (instance: ITerminalGameIo, keyName: KeyName) => {
+const keypressHandler = (instance, keyName) => {
     switch(keyName) {
         case 's':
             if (direction != Direction.Up) direction = Direction.Down

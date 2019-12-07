@@ -8,7 +8,7 @@ import {
 import figlet from 'figlet'
 import games from './games'
 
-let game: ITerminalGameIo
+let game = null
 
 const logo = figlet.textSync('Steaminal', 'Speed')
 const logoLines = logo.split('\n')
@@ -26,7 +26,7 @@ let selectedOption = 0
 const FPS = 60
 
 const line = () => '#'.repeat(BOARD_WIDTH)
-const lineContentCentered = (content: string) => {
+const lineContentCentered = (content) => {
     let contentLine = '#'
 
     const spaces = (BOARD_WIDTH - 2 - (content.length)) / 2
@@ -47,7 +47,7 @@ const lineContentCentered = (content: string) => {
 
 }
 
-const lineToGame = (gameName: string, index: number) => {
+const lineToGame = (gameName, index) => {
     if (index === selectedOption) {
         return lineContentCentered(` ▶  ${gameName}  `)
     }
@@ -55,7 +55,7 @@ const lineToGame = (gameName: string, index: number) => {
     return lineContentCentered(`   ${gameName}  `)
 }
 
-const frameHandler = (instance: ITerminalGameIo) => {
+const frameHandler = (instance) => {
     let frameData = line()
     for (let y = 1; y < BOARD_HEIGHT-1; y++) {
 
@@ -94,7 +94,6 @@ const frameHandler = (instance: ITerminalGameIo) => {
     }
 
     frameData += line()
-
     try {
         instance.drawFrame(frameData, BOARD_WIDTH, BOARD_HEIGHT);
     } catch(e) {
@@ -104,7 +103,7 @@ const frameHandler = (instance: ITerminalGameIo) => {
     }
 }
 
-const keypressHandler = (instance: ITerminalGameIo, keyName: KeyName) => {
+const keypressHandler = (instance, keyName) => {
     switch(keyName) {
         case 's':
             selectedOption += 1
