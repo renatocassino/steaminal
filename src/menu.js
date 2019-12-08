@@ -1,12 +1,10 @@
 import {
-  createTerminalGameIo,
   Key,
 } from 'terminal-game-io';
 import figlet from 'figlet';
 import clear from 'clear';
+import game from './engine';
 import games from './games';
-
-let game = null;
 
 const logo = figlet.textSync('Steaminal', 'Speed');
 const logoLines = logo.split('\n');
@@ -65,14 +63,14 @@ const frameHandler = (instance) => {
     }
 
     if (y === logoLines.length + 9) {
-        frameData += Object.entries(games).map(([_, { title }], idx) => lineToGame(title, idx)).join('');
+      frameData += Object.entries(games).map(([_, { title }], idx) => lineToGame(title, idx)).join('');
 
-        y += Object.keys(games).length - 1;
+      y += Object.keys(games).length - 1;
       continue;
     }
 
-      if (y === BOARD_HEIGHT - 8) {
-          const key = Object.keys(games)[selectedOption];
+    if (y === BOARD_HEIGHT - 8) {
+      const key = Object.keys(games)[selectedOption];
       frameData += lineContentCentered(games[key].description);
       continue;
     }
@@ -112,11 +110,13 @@ const keypressHandler = (instance, keyName) => {
       if (selectedOption < 0) selectedOption = Object.keys(games).length - 1;
       break;
     case Key.Enter:
-      game.active = false;
-      clearInterval(game.intervalId);
       clear();
       const key = Object.keys(games)[selectedOption];
-      games[key].startGame();
+      const { gameData } = games[key];
+
+      game.setFPS(gameData.fps);
+      game.setKeyPressHandler(gameData.keypressHandler);
+      game.setFrameHandler(gameData.frameHandler);
       break;
     case 'q':
       process.exit(0);
@@ -127,9 +127,7 @@ const keypressHandler = (instance, keyName) => {
 };
 
 export default () => {
-  game = createTerminalGameIo({
-    fps: FPS,
-    frameHandler,
-    keypressHandler,
-  });
+  game.setFPS(FPS);
+  game.setKeyPressHandler(keypressHandler);
+  game.setFrameHandler(frameHandler);
 };
