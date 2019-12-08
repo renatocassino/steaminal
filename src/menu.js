@@ -126,6 +126,8 @@ const keypressHandler = (instance, keyName) => {
   }
 };
 
+clear();
+
 export default () => {
   game.setFPS(FPS);
   game.setKeyPressHandler(keypressHandler);

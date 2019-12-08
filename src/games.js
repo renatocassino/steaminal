@@ -1,7 +1,7 @@
 import snakeGame from './games/snake';
-import dinossaurGame from './games/dinossaurGame';
+import penguinJump from './games/penguinJump';
 
 export default {
-  Snake: snakeGame,
-  Dinossaur: dinossaurGame,
+  snakeGame,
+  penguinJump,
 };
