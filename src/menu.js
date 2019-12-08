@@ -14,16 +14,6 @@ const logoLines = logo.split('\n');
 const BOARD_WIDTH = 80;
 const BOARD_HEIGHT = 30;
 
-const options = [
-  'Snake',
-  'Dinossaur Adventure',
-];
-
-const descriptions = [
-  'Classic Snake game with WASD commands',
-  'Game like a Downossaur in Google Chrome game',
-];
-
 let selectedOption = 0;
 
 const FPS = 60;
@@ -75,14 +65,15 @@ const frameHandler = (instance) => {
     }
 
     if (y === logoLines.length + 9) {
-      frameData += options.map((option, idx) => lineToGame(option, idx)).join('');
+        frameData += Object.entries(games).map(([_, { title }], idx) => lineToGame(title, idx)).join('');
 
-      y += options.length - 1;
+        y += Object.keys(games).length - 1;
       continue;
     }
 
-    if (y === BOARD_HEIGHT - 8) {
-      frameData += lineContentCentered(descriptions[selectedOption]);
+      if (y === BOARD_HEIGHT - 8) {
+          const key = Object.keys(games)[selectedOption];
+      frameData += lineContentCentered(games[key].description);
       continue;
     }
 
@@ -114,17 +105,18 @@ const keypressHandler = (instance, keyName) => {
   switch (keyName) {
     case 's':
       selectedOption += 1;
-      if (selectedOption >= options.length) selectedOption = 0;
+      if (selectedOption >= Object.keys(games).length) selectedOption = 0;
       break;
     case 'w':
       selectedOption -= 1;
-      if (selectedOption < 0) selectedOption = options.length - 1;
+      if (selectedOption < 0) selectedOption = Object.keys(games).length - 1;
       break;
     case Key.Enter:
       game.active = false;
       clearInterval(game.intervalId);
       clear();
-      games.Snake();
+      const key = Object.keys(games)[selectedOption];
+      games[key].startGame();
       break;
     case 'q':
       process.exit(0);

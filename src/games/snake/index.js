@@ -156,4 +156,10 @@ const startGame = () => {
   });
 };
 
-export default startGame;
+const game = {
+    startGame,
+    title: 'Snake',
+    description: 'Classic Snake game with WASD commands',
+};
+
+export default game;
