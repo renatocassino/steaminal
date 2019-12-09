@@ -1,7 +1,12 @@
-const FPS = 5;
+import { Key } from 'terminal-game-io';
+
+const FPS = 8;
 
 const BOARD_WIDTH = 140;
 const BOARD_HEIGHT = 15;
+
+let cactusX = BOARD_WIDTH;
+let penguinY = 11;
 
 const penguin = `
  __
@@ -32,7 +37,6 @@ ____|_|`;
 
 
 const addDrawToBoard = (draw, board, x = 0, y = 0) => {
-    debugger
     const drawLines = draw.split('\n').slice(1);
 
     board = board.split('');
@@ -42,6 +46,9 @@ const addDrawToBoard = (draw, board, x = 0, y = 0) => {
         const line = drawLines[i];
         const position = currentY * BOARD_WIDTH + x;
         for (let j = 0; j < line.length; j++) {
+            const currentPosition = position + j;
+            if (currentY !== Math.trunc((currentPosition) / BOARD_WIDTH)) continue;
+            if (!board[currentPosition]) continue;
             board[position + j] = line[j];
         }
         currentY++;
@@ -49,8 +56,6 @@ const addDrawToBoard = (draw, board, x = 0, y = 0) => {
 
     return board.join('');
 }
-
-let cactusX = 70;
 
 const frameHandler = (instance) => {
     let frameData = '';
@@ -71,14 +76,19 @@ const frameHandler = (instance) => {
     frameData = addDrawToBoard(cloud2, frameData, 94, 4);
     frameData = addDrawToBoard(cloud2, frameData, 14, 5);
     frameData = addDrawToBoard(cactus, frameData, cactusX, 9);
-    frameData = addDrawToBoard(penguin, frameData, 3, 11);
+    frameData = addDrawToBoard(penguin, frameData, 3, penguinY);
 
     instance.drawFrame(frameData, BOARD_WIDTH, BOARD_HEIGHT);
     cactusX--;
+
+    if (cactusX + 10 < 0) cactusX = BOARD_WIDTH;
 };
 
 const keypressHandler = (instance, keyName) => {
     switch(keyName) {
+    case Key.Space:
+        penguinY--;
+        break;
     case 'q':
         instance.exit();
     };
