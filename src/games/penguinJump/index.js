@@ -1,7 +1,9 @@
 import { Key } from 'terminal-game-io';
 
-const FPS = 8;
+const getWidthOfDraw = draw => draw.split('\n').map(l => l.length).sort((a, b) => b < a ? -1 : 1).shift();
+const getHeightOfDraw = draw => draw.split('\n').length - 1;
 
+const FPS = 8;
 const BOARD_WIDTH = 140;
 const BOARD_HEIGHT = 15;
 const JUMP_SIZE = 4;
@@ -10,9 +12,10 @@ const CLOUD_VELOCITY = 4;
 const TIME_TO_CLOSE_EYES = 10;
 
 let score = 0;
-
-const getWidthOfDraw = draw => draw.split('\n').map(l => l.length).sort((a, b) => b < a ? -1 : 1).shift();
-const getHeightOfDraw = draw => draw.split('\n').length - 1;
+let looser = false;
+let counterToCloud = 0;
+let counterPenguinCloseEyes = 0;
+let lastFrame = null;
 
 const penguin = `
  __
@@ -90,10 +93,15 @@ const addDrawToBoard = (draw, board, x = 0, y = 0) => {
     return board.join('');
 }
 
-let counterToCloud = 0;
-let counterPenguinCloseEyes = 0;
-
 const frameHandler = (instance) => {
+    if (looser && lastFrame) {
+        const message = 'GAME OVER';
+        let frameData = addDrawToBoard(message, lastFrame, Math.round(BOARD_WIDTH/2 - message.length/2), Math.round(BOARD_HEIGHT/2));
+
+        instance.drawFrame(frameData, BOARD_WIDTH, BOARD_HEIGHT);
+        return;
+    }
+
     counterToCloud++;
 
     if (counterToCloud === CLOUD_VELOCITY) {
@@ -150,11 +158,33 @@ const frameHandler = (instance) => {
     iglooX -= VELOCITY;
 
     if (iglooX + getWidthOfDraw(igloo) < 0) iglooX = BOARD_WIDTH;
+
+    lastFrame = frameData;
 };
 
+const resetGame = () => {
+    score = 0;
+    looser = false;
+    iglooX = BOARD_WIDTH;
+    initialPenguinPositionY = BOARD_HEIGHT - getHeightOfDraw(penguin);
+    penguinY = initialPenguinPositionY;
+    jump = 0;
+    jumping = false;
+    counterPenguinCloseEyes = 0;
+    lastFrame = null;
+}
+
 const keypressHandler = (instance, keyName) => {
+    if (looser) {
+        if (keyName === Key.Enter) {
+            resetGame();
+        }
+        return;
+    }
+
     switch(keyName) {
     case Key.Space:
+    case 'w':
         if (jumping) return;
         jump = JUMP_SIZE * -1;
         jumping = true;
