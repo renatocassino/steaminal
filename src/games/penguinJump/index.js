@@ -9,6 +9,8 @@ const VELOCITY = 4;
 const CLOUD_VELOCITY = 4;
 const TIME_TO_CLOSE_EYES = 10;
 
+let score = 0;
+
 const getWidthOfDraw = draw => draw.split('\n').map(l => l.length).sort((a, b) => b < a ? -1 : 1).shift();
 const getHeightOfDraw = draw => draw.split('\n').length - 1;
 
@@ -67,7 +69,8 @@ for (let i = 0, nClouds = 4; i < nClouds; i++) {
 }
 
 const addDrawToBoard = (draw, board, x = 0, y = 0) => {
-    const drawLines = draw.split('\n').slice(1);
+    const drawLines = draw.split('\n');
+    if (drawLines[0] === '') drawLines.shift();
 
     board = board.split('');
 
@@ -139,6 +142,9 @@ const frameHandler = (instance) => {
         counterPenguinCloseEyes++;
     }
 
+    const scoreText = `Score: ${score}`;
+    frameData = addDrawToBoard(scoreText, frameData, BOARD_WIDTH - scoreText.length - 2, 0);
+    score++;
 
     instance.drawFrame(frameData, BOARD_WIDTH, BOARD_HEIGHT);
     iglooX -= VELOCITY;
@@ -150,7 +156,6 @@ const keypressHandler = (instance, keyName) => {
     switch(keyName) {
     case Key.Space:
         if (jumping) return;
-
         jump = JUMP_SIZE * -1;
         jumping = true;
         break;
