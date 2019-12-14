@@ -4,11 +4,11 @@ const FPS = 8;
 
 const BOARD_WIDTH = 140;
 const BOARD_HEIGHT = 15;
+const JUMP_SIZE = 4;
+const VELOCITY = 4;
 
-let iglooX = BOARD_WIDTH;
-let penguinY = 11;
-let jump = 0;
-let jumping = false;
+const getWidthOfDraw = draw => draw.split('\n').map(l => l.length).sort((a, b) => b < a ? -1 : 1).shift();
+const getHeightOfDraw = draw => draw.split('\n').length - 1;
 
 const penguin = `
  __
@@ -34,6 +34,11 @@ const igloo = `
   .'_ / _ \ _'.____
  / _/ _ | _ \_ \ _.'.
 /_/___/___\___\_\_|_|`;
+
+let iglooX = BOARD_WIDTH;
+let penguinY = BOARD_HEIGHT - getHeightOfDraw(penguin);
+let jump = 0;
+let jumping = false;
 
 const addDrawToBoard = (draw, board, x = 0, y = 0) => {
     const drawLines = draw.split('\n').slice(1);
@@ -89,9 +94,9 @@ const frameHandler = (instance) => {
     frameData = addDrawToBoard(penguin, frameData, 3, penguinY);
 
     instance.drawFrame(frameData, BOARD_WIDTH, BOARD_HEIGHT);
-    iglooX -= 4;
+    iglooX -= VELOCITY;
 
-    if (iglooX + 15 < 0) iglooX = BOARD_WIDTH;
+    if (iglooX + getWidthOfDraw(igloo) < 0) iglooX = BOARD_WIDTH;
 };
 
 const keypressHandler = (instance, keyName) => {
@@ -99,7 +104,7 @@ const keypressHandler = (instance, keyName) => {
     case Key.Space:
         if (jumping) return;
 
-        jump = -4;
+        jump = JUMP_SIZE * -1;
         jumping = true;
         break;
     case 'q':
