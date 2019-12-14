@@ -95,8 +95,14 @@ const addDrawToBoard = (draw, board, x = 0, y = 0) => {
 
 const frameHandler = (instance) => {
     if (looser && lastFrame) {
-        const message = 'GAME OVER';
-        let frameData = addDrawToBoard(message, lastFrame, Math.round(BOARD_WIDTH/2 - message.length/2), Math.round(BOARD_HEIGHT/2));
+        let message = 'GAME OVER';
+        let frameData = addDrawToBoard(message, lastFrame, Math.round(BOARD_WIDTH/2 - message.length/2), Math.round(BOARD_HEIGHT/2)-1);
+
+        message = 'Press enter to play again';
+        frameData = addDrawToBoard(message, frameData, Math.round(BOARD_WIDTH/2 - message.length/2), Math.round(BOARD_HEIGHT/2));
+
+        message = `Your score: ${score}`;
+        frameData = addDrawToBoard(message, frameData, Math.round(BOARD_WIDTH/2 - message.length/2), Math.round(BOARD_HEIGHT/2) + 2);
 
         instance.drawFrame(frameData, BOARD_WIDTH, BOARD_HEIGHT);
         return;
@@ -175,6 +181,8 @@ const resetGame = () => {
 }
 
 const keypressHandler = (instance, keyName) => {
+    if (keyName === 'q') instance.exit();
+
     if (looser) {
         if (keyName === Key.Enter) {
             resetGame();
@@ -189,8 +197,6 @@ const keypressHandler = (instance, keyName) => {
         jump = JUMP_SIZE * -1;
         jumping = true;
         break;
-    case 'q':
-        instance.exit();
     };
 };
 
