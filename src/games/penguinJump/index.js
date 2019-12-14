@@ -6,6 +6,8 @@ const BOARD_WIDTH = 140;
 const BOARD_HEIGHT = 15;
 const JUMP_SIZE = 4;
 const VELOCITY = 4;
+const CLOUD_VELOCITY = 4;
+const TIME_TO_CLOSE_EYES = 10;
 
 const getWidthOfDraw = draw => draw.split('\n').map(l => l.length).sort((a, b) => b < a ? -1 : 1).shift();
 const getHeightOfDraw = draw => draw.split('\n').length - 1;
@@ -15,6 +17,13 @@ const penguin = `
 ( o>
 ///\\
 \\V_/_`;
+
+const penguinClosedEyes = `
+ __
+( ->
+///\\
+\\V_/_`;
+
 
 const cloud = `
       _ .
@@ -36,9 +45,26 @@ const igloo = `
 /_/___/___\___\_\_|_|`;
 
 let iglooX = BOARD_WIDTH;
-let penguinY = BOARD_HEIGHT - getHeightOfDraw(penguin);
+let initialPenguinPositionY = BOARD_HEIGHT - getHeightOfDraw(penguin);
+let penguinY = initialPenguinPositionY;
 let jump = 0;
 let jumping = false;
+
+const clouds = [];
+let cloudDraw = cloud2;
+
+const getBetween = (min, max) => (
+    Math.floor(Math.random() * max) + min
+);
+
+for (let i = 0, nClouds = 4; i < nClouds; i++) {
+    cloudDraw = (cloudDraw === cloud) ? cloud2 : cloud;
+
+    const x = Math.round(BOARD_WIDTH / nClouds * i);
+    const y = getBetween(0, 3);
+
+    clouds.push({ draw: cloudDraw, x, y });
+}
 
 const addDrawToBoard = (draw, board, x = 0, y = 0) => {
     const drawLines = draw.split('\n').slice(1);
@@ -61,13 +87,26 @@ const addDrawToBoard = (draw, board, x = 0, y = 0) => {
     return board.join('');
 }
 
+let counterToCloud = 0;
+let counterPenguinCloseEyes = 0;
+
 const frameHandler = (instance) => {
+    counterToCloud++;
+
+    if (counterToCloud === CLOUD_VELOCITY) {
+        for (let i = 0; i < clouds.length; i++) {
+            clouds[i].x = clouds[i].x - 1;
+            if (clouds[i].x < -10) clouds[i].x = BOARD_WIDTH + 10;
+        }
+        counterToCloud = 0;
+    }
+
     if (jumping) {
         penguinY = Math.round(jump + penguinY);
         jump += 1;
 
-        if (penguinY >= 11) {
-            penguinY = 11;
+        if (penguinY >= initialPenguinPositionY) {
+            penguinY = initialPenguinPositionY;
             jump = 0;
             jumping = false;
         }
@@ -85,13 +124,21 @@ const frameHandler = (instance) => {
         }
     }
 
+    for (let i = 0; i < clouds.length; i++) {
+        const currentCloud = clouds[i];
+        frameData = addDrawToBoard(currentCloud.draw, frameData, currentCloud.x, currentCloud.y);
+    }
 
-    frameData = addDrawToBoard(cloud, frameData, 40, 2);
-    frameData = addDrawToBoard(cloud, frameData, 80, 6);
-    frameData = addDrawToBoard(cloud2, frameData, 94, 4);
-    frameData = addDrawToBoard(cloud2, frameData, 14, 5);
     frameData = addDrawToBoard(igloo, frameData, iglooX, 11);
-    frameData = addDrawToBoard(penguin, frameData, 3, penguinY);
+
+    if (counterPenguinCloseEyes === TIME_TO_CLOSE_EYES) {
+        frameData = addDrawToBoard(penguinClosedEyes, frameData, 3, penguinY);
+        counterPenguinCloseEyes = 0;
+    } else {
+        frameData = addDrawToBoard(penguin, frameData, 3, penguinY);
+        counterPenguinCloseEyes++;
+    }
+
 
     instance.drawFrame(frameData, BOARD_WIDTH, BOARD_HEIGHT);
     iglooX -= VELOCITY;
