@@ -5,8 +5,10 @@ const FPS = 8;
 const BOARD_WIDTH = 140;
 const BOARD_HEIGHT = 15;
 
-let cactusX = BOARD_WIDTH;
+let iglooX = BOARD_WIDTH;
 let penguinY = 11;
+let jump = 0;
+let jumping = false;
 
 const penguin = `
  __
@@ -27,14 +29,11 @@ const cloud2 = `
  (   (   ))
   \`- __.'`;
 
-const cactus = `
-  _  _
- | || | _
- | || || |
-  \\_  || |
-    |  _/
-____|_|`;
-
+const igloo = `
+    .-'''''-.
+  .'_ / _ \ _'.____
+ / _/ _ | _ \_ \ _.'.
+/_/___/___\___\_\_|_|`;
 
 const addDrawToBoard = (draw, board, x = 0, y = 0) => {
     const drawLines = draw.split('\n').slice(1);
@@ -58,6 +57,17 @@ const addDrawToBoard = (draw, board, x = 0, y = 0) => {
 }
 
 const frameHandler = (instance) => {
+    if (jumping) {
+        penguinY = Math.round(jump + penguinY);
+        jump += 1;
+
+        if (penguinY >= 11) {
+            penguinY = 11;
+            jump = 0;
+            jumping = false;
+        }
+    }
+
     let frameData = '';
     for (let y = 0; y < BOARD_HEIGHT; y++) {
         if (y === BOARD_HEIGHT - 1) {
@@ -75,19 +85,22 @@ const frameHandler = (instance) => {
     frameData = addDrawToBoard(cloud, frameData, 80, 6);
     frameData = addDrawToBoard(cloud2, frameData, 94, 4);
     frameData = addDrawToBoard(cloud2, frameData, 14, 5);
-    frameData = addDrawToBoard(cactus, frameData, cactusX, 9);
+    frameData = addDrawToBoard(igloo, frameData, iglooX, 11);
     frameData = addDrawToBoard(penguin, frameData, 3, penguinY);
 
     instance.drawFrame(frameData, BOARD_WIDTH, BOARD_HEIGHT);
-    cactusX--;
+    iglooX -= 4;
 
-    if (cactusX + 10 < 0) cactusX = BOARD_WIDTH;
+    if (iglooX + 15 < 0) iglooX = BOARD_WIDTH;
 };
 
 const keypressHandler = (instance, keyName) => {
     switch(keyName) {
     case Key.Space:
-        penguinY--;
+        if (jumping) return;
+
+        jump = -4;
+        jumping = true;
         break;
     case 'q':
         instance.exit();
